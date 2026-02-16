@@ -1,0 +1,142 @@
+/*
+List the full names and addresses of all patients who were admitted to Room '101' by 
+'Dr. Allen'.
+
+Tables:
+-------
+Admissions ==> AdmissionID int primary key auto_increment, PatientID int not null,
+	       AdmissionDate date not null, DischargeDate date, 
+	       Diagnosis text, DoctorAssigned varchar(50), RoomNumber varchar(10) 
+
+Patient ==> PatientID int primary key auto_increment, FirstName varchar(50) not null, 
+	    LastName varchar(50) not null, Gender enum('Male','Female','Other') not null,
+	    DateOfBirth date not null, ContactNumber varchar(15), Address text
+
+Output:
+-------
++-----------+----------+---------------------------+                                                                                                  
+| FirstName | LastName | Address                   |                                                                                                  
++-----------+----------+---------------------------+                                                                                                  
+| John      | Doe      | 123 Elm Street, Cityville |                                                                                                  
++-----------+----------+---------------------------+                                                                                                  
+                                                        
+*/
+
+use fs;
+select p.FirstName,p.LastName,p.Address from Patient p join Admissions d on p.PatientID = d.PatientID where d.RoomNumber = '101';
+
+-------------------------------------------------------------------------
+
+/*
+Find the average number of days patients spent in the hospital for completed stays 
+(where a discharge date exists).
+
+Tables:
+-------
+Admissions ==> AdmissionID int primary key auto_increment, PatientID int not null,
+	       AdmissionDate date not null, DischargeDate date, 
+	       Diagnosis text, DoctorAssigned varchar(50), RoomNumber varchar(10) 
+
+Patient ==> PatientID int primary key auto_increment, FirstName varchar(50) not null, 
+	    LastName varchar(50) not null, Gender enum('Male','Female','Other') not null,
+	    DateOfBirth date not null, ContactNumber varchar(15), Address text
+
+Output:
+-------
++-------------------+                                                                                                                                 
+| AverageStayLength |                                                                                                                                 
++-------------------+                                                                                                                                 
+|            9.6667 |                                                                                                                                 
++-------------------+
+
+*/
+use fs;
+select avg(AdmissionDate - DischargeDate) as AverageStayLength from Admissions;
+----------------------------------------------------------------------------------
+
+/*
+
+Show the details of patients (FirstName, Gender, and Diagnosis) who have a 'text' entry 
+for their diagnosis rather than a NULL value.
+
+Tables:
+-------
+Admissions ==> AdmissionID int primary key auto_increment, PatientID int not null,
+	       AdmissionDate date not null, DischargeDate date, 
+	       Diagnosis text, DoctorAssigned varchar(50), RoomNumber varchar(10) 
+
+Patient ==> PatientID int primary key auto_increment, FirstName varchar(50) not null, 
+	    LastName varchar(50) not null, Gender enum('Male','Female','Other') not null,
+	    DateOfBirth date not null, ContactNumber varchar(15), Address text
+
+Output:
+-------
++-----------+--------+---------------------+                                                                                                          
+| FirstName | Gender | Diagnosis           |                                                                                                          
++-----------+--------+---------------------+                                                                                                          
+| John      | Male   | Pneumonia           |                                                                                                          
+| Jane      | Female | Fractured Leg       |                                                                                                          
++-----------+--------+---------------------+
+
+*/
+use fs;
+select p.FirstName,p.Gender,d.Diagnosis from Patient p join Admissions d on p.PatientID = d.PatientID where d.Diagnosis is Not Null;
+
+---------------------------------------------------------------------
+
+/*
+Identify all patients born in the 1990s who have been admitted to the hospital.
+
+Tables:
+-------
+Admissions ==> AdmissionID int primary key auto_increment, PatientID int not null,
+	       AdmissionDate date not null, DischargeDate date, 
+	       Diagnosis text, DoctorAssigned varchar(50), RoomNumber varchar(10) 
+
+Patient ==> PatientID int primary key auto_increment, FirstName varchar(50) not null, 
+	    LastName varchar(50) not null, Gender enum('Male','Female','Other') not null,
+	    DateOfBirth date not null, ContactNumber varchar(15), Address text
+
+Output:
+-------
++-----------+----------+-------------+                                                                                                                
+| FirstName | LastName | DateOfBirth |                                                                                                                
++-----------+----------+-------------+                                                                                                                
+| Jane      | Smith    | 1992-03-22  |                                                                                                                
++-----------+----------+-------------+ 
+
+*/
+use fs;
+SELECT DISTINCT p.FirstName, p.LastName, p.DateOfBirth
+FROM Patient p
+JOIN Admissions a
+ON p.PatientID = a.PatientID
+WHERE p.DateOfBirth BETWEEN '1990-01-01' AND '1999-12-31';
+--------------------------------------------------------------------------------------
+
+/*
+Find the total number of Male vs Female patients who have had a hospital admission.
+
+Tables:
+-------
+Admissions ==> AdmissionID int primary key auto_increment, PatientID int not null,
+	       AdmissionDate date not null, DischargeDate date, 
+	       Diagnosis text, DoctorAssigned varchar(50), RoomNumber varchar(10) 
+
+Patient ==> PatientID int primary key auto_increment, FirstName varchar(50) not null, 
+	    LastName varchar(50) not null, Gender enum('Male','Female','Other') not null,
+	    DateOfBirth date not null, ContactNumber varchar(15), Address text
+
+
+Output:
+-------
++--------+--------------+                                                                                                                             
+| Gender | PatientCount |                                                                                                                             
++--------+--------------+                                                                                                                             
+| Male   |            2 |                                                                                                                             
+| Female |            2 |                                                                                                                             
++--------+--------------+ 
+
+*/
+use fs;
+select Gender , count(distinct PatientID) as PatientCount from Patient group by gender;

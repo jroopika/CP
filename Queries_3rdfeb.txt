@@ -1,0 +1,139 @@
+/*
+Write a SQL query to find which patients (first and last name) were admitted for "Pneumonia", and
+which doctor is treatingthem?
+
+
+Tables:
+-------
+Admissions ==> AdmissionID int primary key auto_increment, PatientID int not null,
+	       AdmissionDate date not null, DischargeDate date, 
+	       Diagnosis text, DoctorAssigned varchar(50), RoomNumber varchar(10) 
+
+Patient ==> PatientID int primary key auto_increment, FirstName varchar(50) not null, 
+	    LastName varchar(50) not null, Gender enum('Male','Female','Other') not null,
+	    DateOfBirth date not null, ContactNumber varchar(15), Address text
+
+
+OUTPUT:
++-----------+----------+----------------+                                                                                                             
+| FirstName | LastName | DoctorAssigned |
++-----------+----------+----------------+ 
+| John      | Doe      | Dr. Allen      |
++-----------+----------+----------------+
+*/
+use fs;
+SELECT p.FirstName ,p.LastName, d.DoctorAssigned FROM Patient p JOIN Admissions d on p.PatientID = d.PatientID where d.Diagnosis = 'Pneumonia';
+ 
+
+(or)
+
+
+SELECT p.FirstName ,p.LastName, d.DoctorAssigned FROM Patient p JOIN Admissions d on p.PatientID = d.PatientID where d.Diagnosis Like '%Pneumonia%';
+-------------------------------------------------------------------------------
+
+/*
+Write a SQL query to Provide a list of all patients who have been admitted but do not yet have a
+discharge date recorded.
+
+
+Tables:
+-------
+Admissions ==> AdmissionID int primary key auto_increment, PatientID int not null,
+	       AdmissionDate date not null, DischargeDate date, 
+	       Diagnosis text, DoctorAssigned varchar(50), RoomNumber varchar(10) 
+
+Patient ==> PatientID int primary key auto_increment, FirstName varchar(50) not null, 
+	    LastName varchar(50) not null, Gender enum('Male','Female','Other') not null,
+	    DateOfBirth date not null, ContactNumber varchar(15), Address text
+
+OUTPUT:
++-----------+----------+---------------+
+| FirstName | LastName | AdmissionDate |
++-----------+----------+---------------+
+| Jane      | Smith    | 2024-11-15    |
++-----------+----------+---------------+ 
+*/
+use fs;
+SELECT p.FirstName,p.LastName,d.AdmissionDate from Patient p Join Admissions d ON p.PatientID = d.PatientID where d.DischargeDate IS NULL;
+
+-----------------------------------------------------------------------------
+
+/*
+Write a SQL query to Find How many admissions has each doctor handled, and what is the total number of patients per doctor?
+
+
+Tables:
+-------
+Admissions ==> AdmissionID int primary key auto_increment, PatientID int not null,
+	       AdmissionDate date not null, DischargeDate date, 
+	       Diagnosis text, DoctorAssigned varchar(50), RoomNumber varchar(10) 
+
+Patient ==> PatientID int primary key auto_increment, FirstName varchar(50) not null, 
+	    LastName varchar(50) not null, Gender enum('Male','Female','Other') not null,
+	    DateOfBirth date not null, ContactNumber varchar(15), Address text
+
+OUTPUT:
++----------------+-----------------+                                                                                                                  
+| DoctorAssigned | TotalAdmissions |                                                                                                                  
++----------------+-----------------+                                                                                                                  
+| Dr. Allen      |               1 |                                                                                                                  
++----------------+-----------------+
+
+*/
+use fs;
+SELECT DoctorAssigned,Count(*) as TotalAdmissions from Admissions Group by DoctorAssigned;
+------------------------------------------------------------------------------
+/*
+
+Write a SQL query to Find the List of names and contact numbers of all female patients who were admitted after November 1st,2024.
+
+
+Tables:
+-------
+Admissions ==> AdmissionID int primary key auto_increment, PatientID int not null,
+	       AdmissionDate date not null, DischargeDate date, 
+	       Diagnosis text, DoctorAssigned varchar(50), RoomNumber varchar(10) 
+
+Patient ==> PatientID int primary key auto_increment, FirstName varchar(50) not null, 
+	    LastName varchar(50) not null, Gender enum('Male','Female','Other') not null,
+	    DateOfBirth date not null, ContactNumber varchar(15), Address text
+
+
+OUTPUT:
++-----------+----------+---------------+                                                                                                              
+| FirstName | LastName | ContactNumber |                                                                                                              
++-----------+----------+---------------+                                                                                                              
+| Jane      | Smith    | 0987654321    |                                                                                                              
+| Emily     | Davis    | 4443332222    |                                                                                                              
++-----------+----------+---------------+
+
+*/
+use fs;
+SELECT FirstName,LastName,ContactNumber from Patient where Gender='Female';
+
+--------------------------------------------------------------------------------
+/*
+
+Write a SQL query to Find the diagnosis and room number for John Doe's most recent admission.
+
+Tables:
+-------
+Admissions ==> AdmissionID int primary key auto_increment, PatientID int not null,
+	       AdmissionDate date not null, DischargeDate date, 
+	       Diagnosis text, DoctorAssigned varchar(50), RoomNumber varchar(10) 
+
+Patient ==> PatientID int primary key auto_increment, FirstName varchar(50) not null, 
+	    LastName varchar(50) not null, Gender enum('Male','Female','Other') not null,
+	    DateOfBirth date not null, ContactNumber varchar(15), Address text
+
+OUTPUT:
++-----------+------------+                                                                                                                            
+| Diagnosis | RoomNumber |                                                                                                                            
++-----------+------------+                                                                                                                            
+| Pneumonia | 101        |                                                                                                                            
++-----------+------------+ 
+
+*/
+
+use fs;
+SELECT d.Diagnosis, d.RoomNumber from Patient p join Admissions d on p.PatientID = d.PatientID where p.FirstName ='John' and p.LastName ='Doe' Order BY d.AdmissionDate desc Limit 1;

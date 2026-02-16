@@ -1,0 +1,211 @@
+You are given an array of integers.
+Your task is to determine whether there exists any pair of two distinct elements
+in the array whose sum equals a given target value.
+If such a pair exists, print 1.
+Otherwise, print 0.
+Note:
+-----
+You may not use the same element twice.
+You need to sort the array.
+Input Format:
+-------------
+Line-1: An integer N, representing the size of the array.
+Line-2: N space-separated integers, representing the array elements.
+Line-3: An integer X, representing the target sum.
+Output Format:
+--------------
+Print 1 if a pair exists whose sum equals X, otherwise print 0
+Constraints
+1 ≤ N ≤ 10^5
+-10^9 ≤ array[i] ≤ 10^9
+-10^9 ≤ X ≤ 10^9
+Sample Input:
+-------------
+4
+1 4 2 5
+7
+
+Sample Output:
+-------------
+1
+
+Explanation
+------------
+The numbers 2 and 5 form the sum 7.
+Hence, a valid pair exists → output is 1.
+
+code:
+import java.util.*;
+class Test{
+      public static void main(String[] args){
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int[] arr = new int[n];
+        for(int i=0;i<n;i++){
+            arr[i]= sc.nextInt();
+        }
+        int target = sc.nextInt();
+        Arrays.sort(arr);
+        int i=0;
+        int j = n-1;
+        while(i<j){
+            int s = arr[i]+arr[j];
+            if(s==target){
+                System.out.println(1);
+                return;
+            }else if(s<target){
+                i++;
+            }else{
+                j--;
+            }
+        }
+    System.out.print(0);
+      }
+}
+
+-----------------------------------------------------------------------------------------------
+
+A researcher is working on data analysis and needs to find the best matching values 
+from two sorted datasets based on a target sum.  
+
+The researcher is given:  
+->Two sorted lists of integers representing numerical data.  
+->A target sum to compare against.  
+
+The goal is to identify a pair of numbers (one from each list) whose sum is closest 
+to the given target.  
+
+Rules:
+------
+-> Each selected pair must consist of one element from each list.  
+->If multiple pairs have the same closest sum, any one of them can be returned.  
+->The input lists are already sorted in ascending order.  
+->The output should be printed as a comma-separated pair.
+
+Input Format:
+-------------
+Line 1: An integer N1, representing the size of the first list.
+Line 2: N1 space-separated integers, representing elements of the first sorted list.
+Line 3: An integer N2, representing the size of the second list.
+Line 4: N2 space-separated integers, representing elements of the second sorted list.
+Line 5: An integer X, representing the target sum.
+
+Output Format:
+--------------
+Line-1: Print a comma-separated pair (a, b), where a is from list_1 and b is from list_2, such that their sum is closest to the target sum.
+
+Sample Input-1:
+---------------
+4
+1 4 5 7
+4
+10 20 30 40
+32
+
+Sample Output-1:
+----------------
+1,30
+
+Explanation:
+------------
+The closest pair to 32 is (1,30) → 1 + 30 = 31, which is the closest sum to 32.
+
+Sample Input-2:
+---------------
+3
+2 4 6
+4
+5 7 11 13
+15
+
+Sample Output-2:
+----------------
+2,13
+
+Explanation:
+------------
+The closest pair to 15 is (2,13) → 2 + 13 = 15, which is an exact match.
+
+code:
+
+import java.util.*;
+class Test{
+    public static void Closest(int[] a, int[] b, int target){
+        int i=0;
+        int j= b.length-1;
+        int diff =Integer.MAX_VALUE;
+        int r1=0;
+        int r2=0;
+        while(i<a.length && j>=0){
+            int sum = a[i]+b[j];
+            if(Math.abs(sum-target)<diff){
+                diff= Math.abs(sum-target);
+                r1=a[i];
+                r2=b[j];
+            }
+            if(sum<target){
+                i++;
+            }else{
+                j--;
+            }
+        }
+        System.out.println(r1+" "+r2);
+    }
+    public static void main(String[] args){
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int[] a= new int[n];
+        for(int i=0;i<n;i++){
+            a[i]=sc.nextInt();
+        }
+        int m = sc.nextInt();
+        int[] b = new int[m];
+        for(int i=0;i<m;i++){
+            b[i]=sc.nextInt();
+        }
+        int target = sc.nextInt();
+        
+        Closest(a,b,target);
+    }
+}
+
+---------------------------------------------------------------------------------------------
+
+Given a string s...., return the number of good substrings of length three in s...
+
+Note that if there are multiple occurrences of the same substring, 
+every occurrence should be counted.
+
+A substring is a contiguous sequence of characters in a string.
+
+input =xyzzaz
+output =1
+Explanation: 
+There are 4 substrings of size 3: "xyz", "yzz", "zza", and "zaz". 
+The only good substring of length 3 is "xyz".
+
+input =aababcabc
+output = 4
+Explanation: 
+There are 7 substrings of size 3: 
+"aab", "aba", "bab", "abc", "bca", "cab", and "abc".
+The good substrings are "abc", "bca", "cab", and "abc".
+
+code:
+import java.util.*;
+class Test{
+    public static void main(String[] args){
+        Scanner sc = new Scanner(System.in);
+        String s = sc.nextLine();
+        int count =0;
+        for(int i=0;i<=s.length()-3;i++){
+            char a = s.charAt(i);
+            char b = s.charAt(i+1);
+            char c = s.charAt(i+2);
+            if(a!=b&&b!=c&&c!=a){
+                count++;
+            }
+        }
+        System.out.println(count);
+    }
+}

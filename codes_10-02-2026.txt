@@ -1,0 +1,160 @@
+You are given an array of integers.
+A subarray is called nice if no two numbers in it share a common set bit
+Your task is to find the length of the longest nice subarray.
+
+Input Format:
+----------------
+n
+array integers
+
+Output format:
+----------------
+length of longest nice subarray
+
+Sample Input:
+-------------
+5
+1 3 8 48 10
+
+Sample Output:
+-------------
+3
+
+Explanation:
+------------
+1  = 00001  
+3  = 00011  
+8  = 01000  
+48 = 110000  
+10 = 01010
+The longest nice subarray is: [3, 8, 48]
+No two numbers share a set bit.
+
+
+
+import java.util.*;
+class Test{
+    public static void main(STring[] args){
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int[] arr = new int[n];
+        for(int i=0;i<n;i++){
+            arr[i]= sc.nextInt();
+        }
+        int max =0;
+        for(int i=0;i<n;i++){
+            int x=0;
+            for(int j=i;j<n;j++){
+                if(x&arr[j]!=0){
+                    break;
+                }
+                  x = x|arr[j];
+                  max = Math.max(max,j-i+1);
+            }
+        }
+        System.out.println(max);
+    }
+}
+
+-------------------------------------------------------------------------------
+
+You are given two integers start and goal.
+In one operation, you can flip any one bit of start (change 0 to 1 or 1 to 0).
+Your task is to find the minimum number of bit flips required to convert start 
+into goal.
+
+Input Format:
+--------------
+Two integers:
+Start Goal
+
+Output Format:
+----------------
+A single integer (minimum number of bit flips)
+
+Sample Input 1:
+---------------
+10 7
+
+Sample Output 1:
+-----------------
+3
+
+
+import java.util.*;
+class Test{
+    public static void main(String[] args){
+        Scanner sc = new Scanner(System.in);
+        int x = sc.nextInt();
+        int y = sc.nextInt();
+        int z = x^y;
+        int c =0;
+        if(z!=0){
+            c = Integer.bitCount(z);
+        }
+        System.out.println(c);
+    }
+}
+
+--------------------------------------------------------------------------------
+
+Given an array of integers where all elements occur twice 
+except exactly two elements, which occur only once, 
+your task is to find these two non-repeated elements.
+
+You must print the two non-repeating elements in the order they are found.
+
+Input Format
+------------
+First line contains an integer N — size of the array.
+Second line contains N space-separated integers.
+
+Output Format
+---------------
+Print the two non-repeated integers, separated by space.
+
+Constraints
+-----------
+2 ≤ N ≤ 10^6
+Array will contain exactly two unique elements and all others repeated twice.
+
+Input:
+------
+8
+2 3 7 9 2 3 9 11
+
+Output:
+--------
+7  11  (OR)
+11 7
+
+Explanation:
+------------
+2,3,9 are repeated twice → ignored
+7 and 11 occur once → printed.
+
+import java.util.*;
+class Test{
+    public static void main(String[] args){
+        Scanner sc = new Scanner(System.in);
+        int n =sc.nextInt();
+        int[] arr = new int[n];
+        for(int i=0;i<n;i++){
+            arr[i] = sc.nextInt();
+        }
+        ArrayList<Integer> ar = new ArrayList<>();
+        for(int i=0;i<n;i++){
+            if(ar.contains(arr[i])){
+                ar.remove(Integer.valueOf(arr[i]));
+            }else{
+                ar.add(arr[i]);
+            }
+        }
+        for(int i:ar){
+            System.out.print(i+" ");
+        }
+    }
+}
+
+-------------------------------------------------------------------------------
+

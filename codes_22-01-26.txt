@@ -1,0 +1,193 @@
+Mr.Ram is a sales manager of Dmart, for his analysis he has to monitor 
+sales of Dmart every day. He need to send report of maximum sales 
+of every K consecutive days from given N number of days sales.
+Write a java program to do his task easy.
+
+Input Format:
+-------------
+Line-1: Two space separated integers, N and K
+Line-2: N space separated integers, sales[].
+
+Output Format:
+--------------
+Print maximum sales of every K consecutive days
+
+
+Sample Input 1:
+---------------
+9 3
+1 2 3 1 4 5 2 3 6
+
+Sample output 1:
+----------------
+3 3 4 5 5 5 6
+
+Explanation: 
+------------
+Maximum of subarray {1, 2, 3} is 3
+Maximum of subarray {2, 3, 1} is 3
+Maximum of subarray {3, 1, 4} is 4
+Maximum of subarray {1, 4, 5} is 5
+Maximum of subarray {4, 5, 2} is 5
+Maximum of subarray {5, 2, 3} is 5
+Maximum of subarray {2, 3, 6} is 6
+
+
+
+import java.util.*;
+class Test{
+    public static void MaxSales(int[] arr, int n, int k){
+        ArrayList<Integer> ar = new ArrayList<>();
+        if(n<k){
+            System.out.println("Invalid");
+            return;
+        }
+        for(int i=0;i<k;i++){
+            ar.add(arr[i]);
+        }
+        for(int i=k;i<=n;i++){
+            int max = Collections.max(ar);
+            System.out.print(max+" ");
+            if(i<n){
+                ar.remove(0);
+                ar.add(arr[i]);
+            }
+        }
+    }
+    public static void main(String[] args){
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int k= sc.nextInt();
+        int[] arr = new int[n];
+        for(int i=0;i<n;i++){
+            arr[i]=sc.nextInt();
+        }
+        MaxSales(arr,n,k);
+    }
+}
+
+
+------------------------------------------------------------------------------------------------------------
+
+Cob is working an Group of numbers.
+His teacher gave him to print the Maximum product of the 'k' consiqutive numbers. 
+
+The first line of input contains the group size followed by group numbers followed by k
+
+input = 5
+1 5 3 2 10
+3
+output = 60
+
+input = 7
+8 7 1 8 2 9 1
+2
+output = 56
+
+import java.util.*;
+class Test{
+    public static void MaxProduct(int[] arr, int n, int k){
+        if(n<k || k<=0){
+            System.out.println("Invalid");
+            return;
+        }
+        int x= 0;
+        for(int i=0;i<=n-k;i++){
+            int p=1;
+            for(int j=i;j<i+k;j++){
+                p*=arr[j];
+            }
+            x=Math.max(x,p);
+        }
+        System.out.println(x);
+    }
+    public static void main(String[] args){
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int[] arr = new int[n];
+        for(int i=0;i<n;i++){
+            arr[i]=sc.nextInt();
+        }
+        int k = sc.nextInt();
+        MaxProduct(arr,n,k);
+    }
+}
+
+-----------------------------------------------------------------------------------------------------------------------
+
+A professional thief entered into a floor in a building,
+The floor has M*N inter connected rooms, the thief can enter into any room 
+from any other room. And there are few rooms closed from inside, so the thief 
+cannot enter into them. Initially the thief is at room[0][0] and has to exit 
+from room[m-1][n-1].
+
+You will be given the array room[][], filled with either 0 or 1.
+Here, 1-indiactes a closed room, 0-indiactes a open room.
+Your task is to find and print the number of unique escape routes 
+from room[0][0] and room[m-1][n-1]. And the thief can move only in 
+two directions one is forward direction and other is downward direction.
+
+Input Format:
+-------------
+Line-1: Two space separated integers, M and N.
+Next M lines: N space separated integers, either 0 or 1.
+
+Output Format:
+--------------
+Print an integer result.
+
+
+Sample Input-1:
+---------------
+3 4
+0 0 0 0
+0 1 0 0
+0 0 1 0
+
+Sample Output-1:
+----------------
+2
+
+
+Sample Input-2:
+---------------
+4 4
+0 0 0 0
+0 0 1 0
+1 0 0 0
+0 0 1 0
+
+Sample Output-2:
+----------------
+3
+
+
+import java.util.*;
+class Test{
+     static int m,n;
+     static int[][] arr ;
+     public static int solve(int i,int j){
+         if(i>=m|| j>=n){
+             return 0;
+         }
+         if(arr[i][j]==1){
+             return 0;
+         }
+         if(i==m-1 && j==n-1){
+             return 1;
+         }
+         return solve(i,j+1)+solve(i+1,j);
+     }
+    public static void main(String[] args){
+        Scanner sc = new Scanner(System.in);
+         m = sc.nextInt();
+         n = sc.nextInt();
+        arr = new int[m][n];
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                arr[i][j]=sc.nextInt();
+            }
+        }
+        System.out.print(solve(0,0));
+    }
+}
