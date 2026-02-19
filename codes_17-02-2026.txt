@@ -1,0 +1,231 @@
+In a deep-space communications array, a receiver captures a sequence of P signal bursts. 
+Each burst has a specific energy intensity recorded in a list called intensities[].
+
+A "Compound Wave" is defined as any contiguous sequence of one or more signal bursts.
+The total energy of a Compound Wave is the sum of the intensities of the bursts within that 
+sequence.Your task is to analyze all possible Compound Waves that can be formed from the 
+captured sequence and determine the I-th smallest energy value among them.
+
+Input Format:
+------------
+Line-1: Two space-separated integers, P (total number of signal bursts) and I (the rank of the energy value to find).
+Line-2: P space-separated integers representing the energy intensities[] of each burst.
+
+Output Format:
+-------------
+An integer representing the I-th smallest total energy value.
+
+Sample Input-1:
+--------------
+3 4
+3 2 4
+
+Sample output-1:
+---------------
+5
+
+Explanation: 
+------------
+The receiver captured 3 bursts with intensities [3, 2, 4]. 
+We analyze all possible Compound Waves (contiguous segments):
+
+Single-Burst Wave: [3] — Total Energy: 3
+Single-Burst Wave: [2] — Total Energy: 2
+Single-Burst Wave: [4] — Total Energy: 4
+Dual-Burst Wave: [3, 2] — Total Energy: 5
+Dual-Burst Wave: [2, 4] — Total Energy: 6
+Triple-Burst Wave: [3, 2, 4] — Total Energy: 9
+
+Sorted Energy Values:
+2, 3, 4, 5, 6, 9
+
+The 4th smallest energy value is 5.
+
+
+Sample Input-2:
+---------------
+4 7
+2 2 4 4
+
+Sample output-2:
+----------------
+8
+
+code:
+
+import java.util.*;
+class Test{
+    public static void main(string[] args){
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int k = sc.nextInt();
+        int[] arr = new int[n];
+        for(int i=0;i<n;i++){
+            arr[i] = sc.nextInt();
+        }
+        ArrayList<Integer> ar = new ArrayList<>();
+        for(int i=0;i<n;i++){
+            int sum =0;
+            for(int j=0;i<n;j++){
+                sum=sum+arr[j];
+                ar.add(sum);
+            }
+        }
+        Collections.sort(ar);
+        System.out.println(ar.get(k-1));
+    }
+}
+
+---------------------------------------------------------------------------------------------------------------
+
+You are a jewelry designer working with a collection of rare gemstones. 
+Each gemstone is of a specific type, represented by a character label.
+
+You have been commissioned to design unique "Signature Strands."
+A Signature Strand is a sequence of one or more gemstones chosen from your available collection.
+The order of the gemstones matters (e.g., a Ruby-Diamond strand is different from a Diamond-Ruby 
+strand), but because the stones of the same type are identical, using a different physical stone 
+of the same type does not create a new design.Given a kit of gemstones represented by a string S,
+your goal is to calculate the total number of unique Signature Strands you can create.
+
+The length of a strand can be as small as a single stone or as long as the total number of stones
+in your kit.
+
+Input Format:
+-------------
+A single string S representing the labels of the gemstones in your kit(all uppercase letters).
+
+Output Format:
+--------------
+An integer representing the total count of distinct gemstone sequences.
+
+Sample Case 1: The "AAB" Kit
+----------------------------
+Input:AAB
+Output: 8
+
+Explanation:
+------------
+With two 'A' stones and one 'B' stone, here are the unique strands you can design:
+Length 1: A, B (2 designs)
+Length 2: AA, AB, BA (3 designs)
+Length 3: AAB, ABA, BAA (3 designs)
+Total: 2 + 3 + 3 = 8 unique sequences.
+
+Sample Case 2: The "RGB" Kit 
+----------------------------
+Input: RGB
+Output: 15
+
+Explanation:
+------------
+Since all stones are unique, we calculate P(3,1) + P(3,2) + P(3,3):
+Length 1: R, G, B (3)
+Length 2: RG, RB, GR, GB, BR, BG (6)
+Length 3: RGB, RBG, GRB, GBR, BRG, BGR (6)
+Total: 3 + 6 + 6 = 15 unique sequences.
+
+code:
+
+import java.util.*;
+public class Test{
+    static int total=0; 
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        String S=sc.next();
+        int a[]=new int[26];
+        for(char ch:S.toCharArray()){
+            a[ch-'A']++;
+        }
+        backtrack(a);
+        System.out.println(total);
+    }
+    public static void backtrack(int[] a){
+        for(int i=0;i<26;i++){
+            if(a[i]==0)continue;
+            total++;
+            a[i]--;
+            backtrack(a);
+            a[i]++;
+        }
+    }
+}
+--------------------------------------------------------------------------------------------------
+
+In a high-pressure chemical facility designed by the engineer Clavius, safety protocols dictate
+a specific structural ratio for pressure management. Each Compression Reactor (represented
+by a [ symbol) must be stabilized by exactly two consecutive Pressure Valves (represented by ]] 
+symbols).
+
+A sequence of equipment is considered "Stabilized" only if:
+
+Every Reactor has exactly two consecutive Valves following it.
+Each Reactor must be installed before its designated pair of Valves can be operational.
+
+You are given a current layout of equipment as a string B. 
+Due to a budget shortfall, some layouts were left incomplete.
+Your task is to calculate the minimum number of additional components 
+(either a Reactor [ or a Valve ]) that must be installed to make the entire layout Stabilized.
+
+Constraints & Rules:
+---------------------
+A Reactor [ requires two Valves ]].
+If you have a lone Valve ], it needs another ] to form a pair, plus a preceding [.
+If you have two Valves ]] without a preceding Reactor, you must add a [.
+
+Input Format:
+--------------
+A single string B consisting only of the characters [ and ].
+
+Output Format:
+--------------
+Print an integer representing the minimum number of insertions required to achieve a Stabilized 
+sequence.
+
+
+Sample Input-1:
+---------------
+[]]][
+
+Sample Output-1:
+----------------
+4
+
+
+Sample Input-2:
+---------------
+[]][[]]
+
+Sample Output-2:
+----------------
+2
+
+code:
+
+import java.util.Scanner;
+public class Test {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String s = sc.nextLine();
+        int needed = 0;      
+        int insertions = 0;  
+        for (char ch : s.toCharArray()) {
+            if (ch == '[') {
+                needed += 2;
+            } 
+            else { 
+                needed--;
+                if (needed < 0) {
+                    insertions++;   
+                    needed = 1;     
+                }
+            }
+        }
+        insertions += needed; 
+        System.out.println(insertions);
+    }
+}
+
+
+-------------------------------------------------------------------------------------------------------------
+

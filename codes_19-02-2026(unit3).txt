@@ -1,0 +1,331 @@
+Malika taught a new fun time program practice for Engineering Students.
+As a part of this she has given set of N numbers, and asked the students 
+to perform the operations listed below:
+1. sumRange(start, end) - return the sum of numbers between the indices start and end, both are inclusive.
+2. update(ind, val) - update the value at the index 'ind' to 'val'.
+
+Your task is to solve this problem using Segment Tree concept.
+
+Input Format:
+-------------
+Line-1: Two integers N and Q, size of the array(set of numbers) and query count.
+Line-2: N space separated integers.
+next Q lines: Three integers option, start/ind and end/val.
+
+Output Format:
+--------------
+An integer result, for every sumRange query.
+
+
+Sample Input:
+-------------
+8 5
+4 2 13 4 25 16 17 8
+1 2 6		//sumRange
+1 0 7		//sumRange
+2 2 18	//update
+2 4 17	//update
+1 2 7		//sumRange
+
+
+Sample Output:
+--------------
+75
+89
+80
+
+code:
+
+import java.util.*;
+class ST {
+    class SegmentTree {
+        int start, end;
+        int sum;
+        SegmentTree left, right;
+        public SegmentTree(int start, int end) {
+            this.start = start;
+            this.end = end;
+            this.sum = 0;
+            this.left = null;
+            this.right = null;
+        }
+    }
+    SegmentTree root;
+    public ST(int[] nums) {
+        root = buildTree(nums, 0, nums.length - 1);
+    }
+    private SegmentTree buildTree(int[] nums, int start, int end) {
+        if (start > end)
+            return null;
+        SegmentTree node = new SegmentTree(start, end);
+        if (start == end) {
+            node.sum = nums[start];
+        } else {
+            int mid = start + (end - start) / 2;
+            node.left = buildTree(nums, start, mid);
+            node.right = buildTree(nums, mid + 1, end);
+            node.sum = node.left.sum + node.right.sum;
+        }
+        return node;
+    }
+    public void update(int index, int val) {
+        update(root, index, val);
+    }
+    private void update(SegmentTree node, int index, int val) {
+        if (node.start == node.end) {
+            node.sum = val;
+        } else {
+            int mid = node.start + (node.end - node.start) / 2;
+
+            if (index <= mid)
+                update(node.left, index, val);
+            else
+                update(node.right, index, val);
+
+            node.sum = node.left.sum + node.right.sum;
+        }
+    }
+    public int sumRange(int start, int end) {
+        return sumRange(root, start, end);
+    }
+    private int sumRange(SegmentTree node, int start, int end) {
+        if (node.start == start && node.end == end)
+            return node.sum;
+        int mid = node.start + (node.end - node.start) / 2;
+        if (end <= mid)
+            return sumRange(node.left, start, end);
+        else if (start > mid)
+            return sumRange(node.right, start, end);
+        else
+            return sumRange(node.left, start, mid) +
+                   sumRange(node.right, mid + 1, end);
+    }
+}
+class Test {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int q = sc.nextInt();
+        int[] nums = new int[n];
+        for (int i = 0; i < n; i++)
+            nums[i] = sc.nextInt();
+        ST st = new ST(nums);
+        while (q-- > 0) {
+            int option = sc.nextInt();
+            int a = sc.nextInt();
+            int b = sc.nextInt();
+            if (option == 1) {
+                System.out.println(st.sumRange(a, b));
+            } else if (option == 2) {
+                st.update(a, b);
+            }
+        }
+    }
+}
+
+---------------------------------------------------------------------------------------------------------
+
+Agent X is on a top-secret mission to access a secure vault that contains classified information.
+To unlock the vault, Agent X has received an encrypted numeric sequence from an anonymous source. 
+However, the sequence follows a unique encryption pattern based on a circular array and a key value (k).
+
+To decrypt the sequence, follow these rules:
+
+If k > 0, replace each number with the sum of the next k numbers in the sequence.
+If k < 0, replace each number with the sum of the previous |k| numbers.
+If k == 0, replace each number with 0.
+
+Since the sequence is circular, the next element of the last number is the first number
+and the previous element of the first number is the last number.
+Can you help Agent X decrypt the vault code?
+
+Input Format:
+-------------
+An integer n representing the length of the numeric sequence.
+A list of n integers representing the encrypted sequence.
+An integer k representing the key.
+
+Output Format:
+--------------
+A list of n integers representing the decrypted sequence.
+
+Example 1:
+Input:
+------
+5  
+3 6 1 8 4  
+2  
+Output:
+-------
+[7, 9, 12, 12, 9] 
+
+Explanation:
+Each number is replaced by the sum of the next 2 numbers:
+
+3 → (6 + 1) = 7
+6 → (1 + 8) = 9
+1 → (8 + 4) = 12
+8 → (4 + 3) = 12 (wraps around)
+4 → (3 + 6) = 9 (wraps around)
+
+Example 2:
+Input:
+4  
+2 5 7 1  
+-2  
+Output:
+[8, 9, 6, 12]
+
+Explanation:
+------------
+Each number is replaced by the sum of the previous 2 numbers:
+
+2 → (1 + 7) = 8
+5 → (2 + 1) = 9
+7 → (5 + 2) = 6
+1 → (7 + 5) = 12
+
+Constraints:
+------------
+1 ≤ n ≤ 100
+1 ≤ sequence[i] ≤ 100
+-(n - 1) ≤ k ≤ n - 1
+
+Challenge:
+----------
+Can you optimize your solution to run efficiently for large values of n? 
+
+code: 
+
+import java.util.*;
+class Test {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int[] arr = new int[n];
+        int[] result = new int[n];
+        for (int i = 0; i < n; i++) {
+            arr[i] = sc.nextInt();
+        }
+        int k = sc.nextInt();
+        for (int i = 0; i < n; i++) {
+            int sum = 0;
+            if (k > 0) {
+                int index = i;
+                for (int j = 0; j < k; j++) {
+                    index++;
+                    if (index == n) index = 0;
+                    sum += arr[index];
+                }
+            }
+            else if (k < 0) {
+                int index = i;
+                for (int j = 0; j < -k; j++) {
+                    index--;
+                    if (index < 0) index = n - 1;
+                    sum += arr[index];
+                }
+            }
+            result[i] = sum;
+        }
+        System.out.println(Arrays.toString(result));
+    }
+}
+--------------------------------------------------------------------------------------------------------
+
+In a distant galaxy, a delivery drone is assigned to transport supplies between
+n space stations arranged in a circular orbit. Each space station provides a 
+certain amount of fuel, and the drone requires a specific amount of fuel to 
+travel from one station to the next in a clockwise direction.
+
+The drone begins its journey with an empty fuel tank and must start from one of
+the stations. Your task is to determine from which station the drone should 
+start its journey to successfully complete one full trip around the orbit 
+without running out of fuel. If it is impossible to complete the journey 
+from any station, return -1.
+
+Input Format:
+--------------
+An integer n representing the number of space stations.
+An array fuel[i], where fuel[i] is the amount of fuel available at the ith station.
+An array cost[i], where cost[i] is the fuel required to travel from station i to station (i+1) % n.
+
+Output Format:
+--------------
+Return the index of the station where the drone should start its journey.
+If no such station exists, return -1.
+
+Example 1:
+----------
+Input=
+5  
+1, 2, 3, 4, 5 --(Fuel)
+3, 4, 5, 1, 2 --(cost)
+
+Output=
+3
+
+Explanation:
+------------
+Start at station 3 with 4 units of fuel. tank = 4.
+Travel to station 4, consume 1 fuel, gain 5. tank = 4 - 1 + 5 = 8.
+Travel to station 0, consume 2 fuel, gain 1. tank = 8 - 2 + 1 = 7.
+Travel to station 1, consume 3 fuel, gain 2. tank = 7 - 3 + 2 = 6.
+Travel to station 2, consume 4 fuel, gain 3. tank = 6 - 4 + 3 = 5.
+Travel back to station 3, consume 5 fuel. tank = 5 - 5 = 0.
+The drone successfully returns to station 3, so we return 3.
+
+Example 2:
+----------
+Input=
+3  
+2, 3, 4 
+3, 4, 3
+
+Output=
+-1
+
+Explanation:
+------------
+Starting from any station, the drone will eventually run out of fuel before completing the journey.
+Therefore, it's impossible to complete a full cycle, and the output is -1.
+
+Constraints
+-----------
+1 <= n <= 10⁵
+0 <= fuel[i], cost[i] <= 10⁴
+The space stations are arranged in a circular path.
+
+code:
+import java.util.*;
+class Test {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int[] arr = new int[n];   
+        int[] fuel = new int[n];  
+        for (int i = 0; i < n; i++) {
+            arr[i] = sc.nextInt();
+        }
+        for (int i = 0; i < n; i++) {
+            fuel[i] = sc.nextInt();
+        }
+        int total = 0;
+        int current = 0;
+        int start = 0;
+        for (int i = 0; i < n; i++) {
+            int diff = arr[i] - fuel[i];
+            total += diff;
+            current += diff;
+            if (current < 0) {
+                start = i + 1;
+                current = 0;
+            }
+        }
+        if (total >= 0) {
+            System.out.println(start);
+        } else {
+            System.out.println(-1);
+        }
+    }
+}
